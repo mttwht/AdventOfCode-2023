@@ -10,28 +10,25 @@ with open("input-02.txt", "r") as file:
 # Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red
 # Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green
 # """.splitlines()][1:]
-# # Example answer  = 8
-
-limits = {
-    'red': 12,
-    'green': 13,
-    'blue': 14
-}
+# # Example answer  = 2286
 
 
 answer = 0
 
-
 for line in lines:
     match = re.match("^Game (\d+): (.+)$", line)
     game_id, game = match.groups()
-    game_is_possible = True
+    mins = {
+        'red': 1,
+        'green': 1,
+        'blue': 1
+    }
     for reveal in game.split('; '):
         for colour_reveal in reveal.split(', '):
             qty, colour = colour_reveal.split()
-            if int(qty) > limits[colour]:
-                game_is_possible = False
-    if game_is_possible:
-        answer += int(game_id)
+            mins[colour] = max(mins[colour], int(qty))
+    game_mins = mins['red'] * mins['green'] * mins['blue']
+    # print(game_mins)
+    answer += game_mins
 
 print(answer)
