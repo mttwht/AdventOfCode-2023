@@ -9,22 +9,22 @@ with open("input-04.txt", "r") as file:
 # Card 5: 87 83 26 28 32 | 88 30 70 12 93 22 82 36
 # Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11
 # """.splitlines()][1:]
-# # Example answer  = 13
+# # Example answer  = 30
 
 
-total_points = 0
+card_counts = [1 for i in range(len(lines))]
 
-for line in lines:
+for index in range(len(lines)):
+    line = lines[index]
     card_points = 0
     card, numbers = line.split(":")
     card_num = card.split()[1]
     winning_numbers, card_numbers = [nums.split() for nums in numbers.split("|")]
     for num in card_numbers:
         if winning_numbers.count(num):
-            if card_points == 0:
-                card_points = 1
-            else:
-                card_points *= 2
-    total_points += card_points
+            card_points += 1
+    for i in range(index+1, index+1+card_points):
+        if i < len(card_counts):
+            card_counts[i] += card_counts[index]
 
-print(total_points)
+print(sum(val for val in card_counts))
