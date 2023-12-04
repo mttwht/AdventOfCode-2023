@@ -11,20 +11,28 @@ with open("input-04.txt", "r") as file:
 # """.splitlines()][1:]
 # # Example answer  = 30
 
+def parse_line(line: str):
+    card, numbers = line.split(":")
+    card_num = card.split()[1]
+    winning_numbers, card_numbers = [nums.split() for nums in numbers.split("|")]
+    return card_num, winning_numbers, card_numbers
+
+def calculate_points(winning_numbers: list[int], card_numbers: list[int]):
+    card_points = 0
+    for num in card_numbers:
+        if winning_numbers.count(num):
+            card_points += 1
+    return card_points
+
 
 card_counts = [1 for i in range(len(lines))]
 
 for index in range(len(lines)):
     line = lines[index]
-    card_points = 0
-    card, numbers = line.split(":")
-    card_num = card.split()[1]
-    winning_numbers, card_numbers = [nums.split() for nums in numbers.split("|")]
-    for num in card_numbers:
-        if winning_numbers.count(num):
-            card_points += 1
+    card_num, winning_numbers, card_numbers = parse_line(line)
+    card_points = calculate_points(winning_numbers, card_numbers)
     for i in range(index+1, index+1+card_points):
         if i < len(card_counts):
             card_counts[i] += card_counts[index]
 
-print(sum(val for val in card_counts))
+print(sum(card_counts))
