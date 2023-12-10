@@ -1,31 +1,26 @@
-# with open("input-06.txt", "r") as file:
-#     lines = [line.strip() for line in file.readlines()]
+import re
 
-lines = [line.strip() for line in """
-Time:      7  15   30
-Distance:  9  40  200
-""".splitlines()][1:]
-# Example answer  = 288
+with open("input-06.txt", "r") as file:
+    lines = [line.strip() for line in file.readlines()]
+
+# lines = [line.strip() for line in """
+# Time:      7  15   30
+# Distance:  9  40  200
+# """.splitlines()][1:]
+# # Example answer  = 71503
 
 
 def parse_lines(lines: list[str]):
-    times = [int(n) for n in lines[0].split(":")[1].split()]
-    distances = [int(n) for n in lines[1].split(":")[1].split()]
-    return times, distances
+    time = int(lines[0].split(":")[1].replace(" ", ""))
+    distance = int(lines[1].split(":")[1].replace(" ", ""))
+    return time, distance
 
 
-times, distances = parse_lines(lines)
-winning_ways = []
+time, distance = parse_lines(lines)
 
-for i in range(len(times)):
-    ways = 0
-    for duration in range(times[i]):
-        if duration * (times[i] - duration) > distances[i]:
-            ways += 1
-    winning_ways.append(ways)
+ways = 0
+for duration in range(time):
+    if duration * (time - duration) > distance:
+        ways += 1
 
-answer = 1
-for w in winning_ways:
-    answer *= w
-
-print(answer)
+print(ways)
