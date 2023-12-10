@@ -36,7 +36,7 @@ with open("input-05.txt", "r") as file:
 # 60 56 37
 # 56 93 4
 # """.splitlines()][1:]
-# # Example answer  = 35
+# # Example answer  = 46
 
 
 def parse(lines: list[str]):
@@ -58,19 +58,36 @@ def parse(lines: list[str]):
 seeds, maps = parse(lines)
 locations = []
 
-for seed in seeds:
-    seed_val = seed
-    for map in maps:
-        map_val = None
-        for range in map:
-            if seed_val >= range[1] and seed_val < range[1] + range[2]:
-                diff = seed_val - range[1]
-                map_val = range[0] + diff
-                break
-        if map_val is None:
-            map_val = seed_val
-        seed_val = map_val
-    locations.append(seed_val)
+for i in range(0, len(seeds), 2):
+    seed = seeds[i]
+    while seed < seeds[i] + seeds[i+1]:
+        seed_val = seed
+        min_dist_to_next_range = None
+        for map in maps:
+            map_val = None
+            for map_range in map:
+                if seed_val >= map_range[1] and seed_val < map_range[1] + map_range[2]:
+                    diff = seed_val - map_range[1]
+                    map_val = map_range[0] + diff
+                    dist_to_next_range = map_range[2] - diff
+                    if min_dist_to_next_range is None or dist_to_next_range < min_dist_to_next_range:
+                        min_dist_to_next_range = dist_to_next_range
+                    break
+            if map_val is None:
+                map_val = seed_val
+                larger_min_diffs = [r[1] - seed_val for r in map if r[1] > seed_val]
+                if len(larger_min_diffs) > 0:
+                    if min_dist_to_next_range is None or min(larger_min_diffs) < min_dist_to_next_range:
+                        min_dist_to_next_range = min(larger_min_diffs)
+                # else:
+                    # min_dist_to_next_range = 1
+            seed_val = map_val
+        locations.append(seed_val)
 
-print(locations)
+        # min_dist_to_next_range = max(1, min_dist_to_next_range)
+        seed += min_dist_to_next_range
+        # if min_dist_to_next_range > 1:
+            # print(min_dist_to_next_range)
+
+# print(locations)
 print(min(locations))
