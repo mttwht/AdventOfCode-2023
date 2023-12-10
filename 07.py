@@ -8,10 +8,10 @@ with open("input-07.txt", "r") as file:
 # KTJJT 220
 # QQQJA 483
 # """.splitlines()][1:]
-# # Example answer  = 6440
+# # Example answer  = 5905
 
 
-card_strengths = "AKQJT98765432"
+card_strengths = "AKQT98765432J"
 
 
 def get_hand_strength(hand: str):
@@ -22,17 +22,27 @@ def get_hand_strength(hand: str):
         else:
             card_counts[c] += 1
     
-    if 5 in card_counts.values():
+    j = 0
+    if 'J' in card_counts:
+        j = card_counts['J']
+        card_counts.pop('J')
+        if len(card_counts) == 0:
+            return 0
+    
+    counts = sorted(list(card_counts.values()), reverse=True)
+    counts[0] += j
+    
+    if 5 in counts:
         return 0
-    elif 4 in card_counts.values():
+    elif 4 in counts:
         return 1
-    elif 3 in card_counts.values() and 2 in card_counts.values():
+    elif 3 in counts and 2 in counts:
         return 2
-    elif 3 in card_counts.values():
+    elif 3 in counts:
         return 3
-    elif 2 in card_counts.values() and len(card_counts) == 3:
+    elif 2 in counts and len(card_counts) == 3:
         return 4
-    elif 2 in card_counts.values():
+    elif 2 in counts:
         return 5
     else:
         return 6
