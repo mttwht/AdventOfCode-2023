@@ -6,7 +6,7 @@ with open("input-09.txt", "r") as file:
 # 1 3 6 10 15 21
 # 10 13 16 21 30 45
 # """.splitlines()][1:]
-# # Example answer  = 114
+# # Example answer  = 2
 
 predictions = []
 for line in lines:
@@ -18,12 +18,12 @@ for line in lines:
         values = [values[i+1] - values[i] for i in range(len(values)-1)]
         line_vals.append(values)
     
-    last_num = 0
+    first_num = 0
     for diff_seq in reversed(line_vals):
-        diff_seq.append(diff_seq[-1] + last_num)
-        last_num = diff_seq[-1]
+        diff_seq.insert(0, diff_seq[0] - first_num)
+        first_num = diff_seq[0]
     
-    predictions.append(last_num)
+    predictions.append(first_num)
 
 print(predictions)
 print(sum(predictions))
